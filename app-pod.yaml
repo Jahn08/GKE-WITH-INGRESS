@@ -1,0 +1,82 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app
+  labels:
+    io.kompose.service: app
+spec:
+  containers:
+  - env:
+    - name: ABOUT_WEBSITE
+      value: "https://github.com/Jahn08/WEB-TIMER"
+    - name: NODE_ENV
+      value: production
+    - name: SERVER_PORT
+      value: "4443"
+#    - name: MAIL_HOST
+#      value: "smtp.somemail.com"
+#    - name: MAIL_AUTH_USER
+#      value: "someuser@somemail.com"
+#    - name: MAIL_SECURE_PORT
+#      value: "465"
+#    - name: SERVER_EXTERNAL_HOST
+#      value: youhost.com
+    - name: AUTH_FACEBOOK_CLIENT_ID
+      valueFrom:
+        secretKeyRef:
+          name: app-secret
+          key: AUTH_FACEBOOK_CLIENT_ID
+    - name: AUTH_FACEBOOK_CLIENT_SECRET
+      valueFrom:
+        secretKeyRef:
+          name: app-secret
+          key: AUTH_FACEBOOK_CLIENT_SECRET
+    - name: SERVER_PFX_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: app-secret
+          key: SERVER_PFX_PASSWORD
+#    - name: MAIL_AUTH_PASSWORD
+#      valueFrom:
+#        secretKeyRef:
+#          name: app-secret
+#          key: MAIL_AUTH_PASSWORD
+#    - name: MONGO_HOST
+#      valueFrom:
+#        secretKeyRef:
+#          name: app-secret
+#          key: MONGO_HOST
+    #publicly available docker image - this one requires a correct pfx-certificate password
+    image: jahn27/webtimer:latest
+    name: app
+    ports:
+    - containerPort: 4443
+    readinessProbe:
+      httpGet:
+        path: /
+        port: 4443
+        scheme: HTTPS
+      initialDelaySeconds: 15
+      periodSeconds: 5
+      timeoutSeconds: 5
+    livenessProbe:
+      httpGet:
+        path: /
+        port: 4443
+        scheme: HTTPS
+      initialDelaySeconds: 15
+      periodSeconds: 5
+      timeoutSeconds: 5
+    #resources should be set up in accordance with application requirements and cloud availabilities
+    resources:
+      requests:
+        cpu: 150m
+        memory: 300Mi
+      limits:
+        cpu: 300m
+        memory: 600Mi
+  restartPolicy: OnFailure
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000 #typically, the very first non-root user created with ID=1000 in Linux systems
+status: {}

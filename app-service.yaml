@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    cloud.google.com/app-protocols: '{"https-port":"HTTPS"}'
+  name: app
+spec:
+  type: NodePort
+  ports:
+  - name: https-port
+    nodePort: 32380 #set automatically, if omitted 
+    port: 443
+    targetPort: 4443
+  selector:
+    io.kompose.service: app

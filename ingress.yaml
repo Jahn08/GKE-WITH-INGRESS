@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: "www-app-ingress"
+  annotations:
+    kubernetes.io/ingress.class: "gce"
+    kubernetes.io/ingress.global-static-ip-name: "yourstatic-ip"
+    cert-manager.io/cluster-issuer: "letsencrypt"
+    acme.cert-manager.io/http01-edit-in-place: "true"
+spec:
+  tls:
+    - hosts: [youhost.com,www.youhost.com]
+      secretName: www-yourhost-tls
+  rules:
+  - host: youhost.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: app
+          servicePort: 443
+  - host: www.youhost.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: app
+          servicePort: 443
+  backend:
+    serviceName: app
+    servicePort: 443
+status:
+  loadBalancer: {}
