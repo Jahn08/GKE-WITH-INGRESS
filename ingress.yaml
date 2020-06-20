@@ -6,10 +6,13 @@ metadata:
     kubernetes.io/ingress.class: "gce"
     kubernetes.io/ingress.global-static-ip-name: "yourstatic-ip"
     cert-manager.io/cluster-issuer: "letsencrypt"
+    # The existing ingress will be modified as soon as a cluster issuer has created the real certificate,
+    # until then a temporary one is used.
     acme.cert-manager.io/http01-edit-in-place: "true"
 spec:
   tls:
     - hosts: [youhost.com,www.youhost.com]
+      # Secret resource that will be used to store the account's private key.
       secretName: www-yourhost-tls
   rules:
   - host: youhost.com
