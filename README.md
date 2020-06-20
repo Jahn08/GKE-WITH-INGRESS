@@ -1,6 +1,6 @@
 # GKE-WITH-INGRESS
 
-The repository demonstrates how to deploy an application from container image using Google Kubernetes Engine (GKE). [WEB-TIMER](https://github.com/Jahn08/WEB-TIMER) is exploited as a containerised application.
+The repository demonstrates how to deploy an application from container image using Google Kubernetes Engine (GKE). [WEB-TIMER](https://github.com/Jahn08/WEB-TIMER) is exploited as a containerised application (**[an example deployed on GKE](https://webtimer.tk)**).
 
 ## Getting Started
 
